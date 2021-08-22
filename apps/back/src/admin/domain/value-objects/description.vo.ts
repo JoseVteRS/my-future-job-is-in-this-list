@@ -5,7 +5,7 @@ export class VODescription extends PrimitiveValueObject<string> {
   protected validate(value: string) {
     if (typeof value !== 'string')
       throw new Error('Description must be a string');
-    if (value.length > 150) throw new JobDescriptionLongerException();
+    if (value.length > 350) throw new JobDescriptionLongerException();
     return true;
   }
 }
