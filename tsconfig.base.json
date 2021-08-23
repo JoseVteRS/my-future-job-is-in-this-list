@@ -15,8 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@shared-kernel/*": ["libs/shared-kernel/src/*"],
-      "@back/*": ["apps/back/src/*"]
+      "@back/*": ["apps/back/src/*"],
+      "@utils/*": ["libs/utils/src/*"],
+      "@shared-kernel/*": ["libs/shared-kernel/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
