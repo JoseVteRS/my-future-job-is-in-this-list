@@ -1,3 +1,4 @@
+import { VOExtraInformation } from '@back/admin/domain/value-objects/extra-information.vo';
 import { IJobRepository } from '@back/admin/domain/repository/job-repository.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { SchemasEnum } from '@back/config/monodb/enums/schemas.enum';
@@ -9,34 +10,49 @@ import {
 import { JobModel } from '@back/admin/domain/model/job.model';
 import { JobNotFoundException } from '@back/admin/domain/exceptions/job-not-found.exception';
 import { VOUuid } from '@shared-kernel/common/domain/value-objects/uuid.vo';
+import { VOStatus } from '@back/admin/domain/value-objects/status.vo';
 
 export class JobMongoRepository implements IJobRepository {
   constructor(
     @InjectModel(SchemasEnum.JOB)
     private readonly jobMongoModel: Model<IJobDoc>
-  ) {}
+  ) { }
 
   toDomain(persistanceEntity: IJob): JobModel {
     const {
       _id,
       title,
       description,
+      extraInformation,
       url,
       status,
-      isChecked,
     } = persistanceEntity;
-    return JobModel.build(_id, title, description, url, status, isChecked);
+    return JobModel.build(
+      _id,
+      title,
+      description,
+      extraInformation,
+      url,
+      status
+    );
   }
 
   toPersistence(domainEntity: JobModel): IJob {
-    const { _id, title, description, url, status, isChecked } = domainEntity;
+    const {
+      _id,
+      title,
+      description,
+      extraInformation,
+      url,
+      status,
+    } = domainEntity;
     return {
       _id: _id.value,
       title: title.value,
       description: description.value,
+      extraInformation: extraInformation.value,
       url: url.value,
       status: status.value,
-      isChecked: isChecked.value,
     };
   }
 
@@ -66,18 +82,17 @@ export class JobMongoRepository implements IJobRepository {
     return true;
   }
 
-  async markCheckedJob(jobId: VOUuid): Promise<void> {
-    await this.findById(jobId);
-    await this.jobMongoModel
-      .findByIdAndUpdate(jobId, { isChecked: true })
-      .exec();
+  async updateExtraInformation(jobId: VOUuid, extraInformation: VOExtraInformation): Promise<boolean> {
+    await this.jobMongoModel.findByIdAndUpdate(jobId, { extraInformation: extraInformation.value });
+    return true;
   }
 
-  async markNotCheckedJob(jobId: VOUuid): Promise<void> {
+  async changeStatusJob(jobId: VOUuid, status: VOStatus): Promise<boolean> {
     await this.findById(jobId);
     await this.jobMongoModel
-      .findByIdAndUpdate(jobId, { isChecked: false })
+      .findByIdAndUpdate(jobId, { status: status.value })
       .exec();
+    return true;
   }
 
   async delete(jobId: VOUuid): Promise<boolean> {

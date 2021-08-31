@@ -1,6 +1,9 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { JobStatusEnum } from '@back/admin/domain/enums/job-status.enum';
 
+
+
+
 @InputType()
 export class JobCreateInput {
   @Field(() => String)
@@ -8,9 +11,9 @@ export class JobCreateInput {
   @Field(() => String, { nullable: true })
   description?: string;
   @Field(() => String, { nullable: true })
-  url?: string;
+  extraInformation?: string;
   @Field(() => String, { nullable: true })
+  url?: string;
+  @Field(() => JobStatusEnum, { nullable: true })
   status?: JobStatusEnum;
-  @Field(() => Boolean, { nullable: true })
-  isChecked?: boolean;
 }

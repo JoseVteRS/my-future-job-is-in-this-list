@@ -12,8 +12,11 @@ export class Job {
   description?: string;
 
   @Field(() => String, { nullable: true })
+  extraInformation?: string;
+
+  @Field(() => String, { nullable: true })
   url?: string;
 
-  @Field(() => Boolean, { nullable: true })
-  isChecked?: boolean;
+  @Field(() => String, { nullable: true })
+  status?: string;
 }

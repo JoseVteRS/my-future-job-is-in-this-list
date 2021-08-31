@@ -22,7 +22,17 @@
     "back": {
       "tags": []
     },
+    "front": {
+      "tags": []
+    },
+    "front-e2e": {
+      "tags": [],
+      "implicitDependencies": ["front"]
+    },
     "shared-kernel": {
+      "tags": []
+    },
+    "utils": {
       "tags": []
     }
   }

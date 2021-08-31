@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.mark-container > h1 {
+  @apply text-3xl font-bold border-b pb-2 my-3 border-gray-300;
+}
+
+.mark-container > h2 {
+  @apply text-2xl font-bold border-b pb-2 my-3 border-gray-300;
+}
+
+.mark-container > h3 {
+  @apply text-xl font-semibold border-b pb-2 my-3 border-gray-300;
+}
+
+.mark-container > h4 {
+  @apply text-lg font-medium border-b pb-2 my-3 border-gray-300;
+}
+
+.mark-container > h5 {
+  @apply text-base font-medium border-b pb-2 my-3 border-gray-300;
+}
+
+.mark-container > h6 {
+  @apply text-sm font-medium border-b pb-2 my-2 border-gray-300;
+}
+
+.mark-container > ul {
+  @apply list-inside list-disc mb-4;
+}
+
+.mark-container > .contains-task-list > .task-list-item {
+  @apply list-none;
+}
+
+/* Modal */
+.overlay {
+  @apply w-screen h-screen fixed top-0 left-0 dark:bg-gray-900 bg-gray-100 bg-opacity-90 p-8 flex items-center justify-center z-50;
+}
+.modal-component {
+  @apply w-1/2 dark:bg-gray-800 bg-gray-50 relative rounded-md shadow-lg;
+}
+
+.button-modal__close {
+  @apply absolute top-4 right-4 w-7 h-7 border-none bg-transparent cursor-pointer rounded;
+}
+
+/* End Modal */

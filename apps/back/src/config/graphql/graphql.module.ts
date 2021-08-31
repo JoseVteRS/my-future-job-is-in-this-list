@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
+import { GraphQLModule, registerEnumType } from '@nestjs/graphql';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CommonEnv } from '@shared-kernel/common/infrastructure/enums/common-env.enum';
 import { join } from 'path';
+import { JobStatusEnum } from '@back/admin/domain/enums/job-status.enum';
+
+registerEnumType(JobStatusEnum, {name: 'JobStatusEnum'})
 
 @Module({
   imports: [

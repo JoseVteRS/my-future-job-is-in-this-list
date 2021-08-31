@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { JobStatusEnum } from '@back/admin/domain/enums/job-status.enum';
 
 @Schema({
   versionKey: false,
@@ -16,17 +17,17 @@ export class Job {
   @Prop({ type: String, required: false })
   description: string;
 
-  /** Job's description */
+  /** Job's extra information */
+  @Prop({ type: String, required: false })
+  extraInformation: string;
+
+  /** Job's url */
   @Prop({ type: String, required: false })
   url: string;
 
-  /** Job's description */
-  @Prop({ type: String, required: false })
+  /** Job's status */
+  @Prop({ type: String, required: false, enum: JobStatusEnum })
   status: string;
-
-  /** Job's state */
-  @Prop({ type: Boolean, required: false, default: false })
-  isChecked: boolean;
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job);

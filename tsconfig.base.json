@@ -16,8 +16,10 @@
     "baseUrl": ".",
     "paths": {
       "@back/*": ["apps/back/src/*"],
-      "@utils/*": ["libs/utils/src/*"],
-      "@shared-kernel/*": ["libs/shared-kernel/src/*"]
+      "@front/*": ["apps/front/*"],
+      "@frontComponents/*": ["apps/front/components/*"],
+      "@shared-kernel/*": ["libs/shared-kernel/src/*"],
+      "@utils/*": ["libs/utils/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

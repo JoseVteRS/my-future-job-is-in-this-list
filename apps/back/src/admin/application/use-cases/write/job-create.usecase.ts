@@ -9,6 +9,7 @@ import { VOBoolean } from '@shared-kernel/common/domain/value-objects/boolean.vo
 import { JobModel } from '@back/admin/domain/model/job.model';
 import { Injectable } from '@nestjs/common';
 import { VOStatus } from '@back/admin/domain/value-objects/status.vo';
+import { VOExtraInformation } from '@back/admin/domain/value-objects/extra-information.vo';
 
 @Injectable()
 export class JobCreateUsecase implements IUseCase {
@@ -21,17 +22,17 @@ export class JobCreateUsecase implements IUseCase {
     jobId: VOUuid,
     title: VOTitle,
     description: VODescription | null,
+    extraInformation: VOExtraInformation | null,
     url: VOString | null,
-    status: VOStatus | null,
-    isChecked: VOBoolean | null
+    status: VOStatus | null
   ) {
     const job = JobModel.create(
       jobId,
       title,
       description,
+      extraInformation,
       url,
-      status,
-      isChecked
+      status
     );
     await this.jobRepository.create(job);
   }

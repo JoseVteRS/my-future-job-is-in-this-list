@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { jobStatusMapper } from '../../../next-shared/job-status-mapper';
 
-const Badge = () => {
+const Badge = ({ status }) => {
   return (
-    <div
-      className={`${jobStatusMapper[job.status].bgColor} ${
-        jobStatusMapper[job.status].textColor
-      } max-w-max px-2 py-1 rounded-full text-sm font-medium`}
-    >
-      {jobStatusMapper[job.status].name}
-    </div>
+    <>
+      <div
+        className={`${jobStatusMapper[status].bgColor} ${jobStatusMapper[status].textColor} max-w-max px-2 py-1 rounded-full text-sm font-medium`}
+      >
+        {jobStatusMapper[status].name}
+      </div>
+    </>
   );
 };
 

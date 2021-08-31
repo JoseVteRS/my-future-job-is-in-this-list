@@ -2,22 +2,20 @@ import { AggregateRoot } from '@nestjs/cqrs';
 import { VOUuid } from '@shared-kernel/common/domain/value-objects/uuid.vo';
 import { VOTitle } from '@back/admin/domain/value-objects/title.vo';
 import { VODescription } from '@back/admin/domain/value-objects/description.vo';
-import { VOBoolean } from '@shared-kernel/common/domain/value-objects/boolean.vo';
 import { VOString } from '@shared-kernel/common/domain/value-objects/string.vo';
 import { JobNothingToUpdateException } from '@back/admin/domain/exceptions/job-nothing-to-update.exception';
-import { JobCantCheckedException } from '@back/admin/domain/exceptions/job-cant-checked.exception';
-import { JobCantUncheckedException } from '@back/admin/domain/exceptions/job-cant-unchecked.exception';
 import { VOStatus } from '@back/admin/domain/value-objects/status.vo';
+import { VOExtraInformation } from '@back/admin/domain/value-objects/extra-information.vo';
 import { JobStatusEnum } from '@back/admin/domain/enums/job-status.enum';
 
 export class JobModel extends AggregateRoot {
   constructor(
     public _id: VOUuid,
     public title: VOTitle,
-    public description: VODescription,
-    public url: VOString,
-    public status: VOStatus,
-    public isChecked: VOBoolean
+    public description: VODescription | null,
+    public extraInformation: VOExtraInformation | null,
+    public url: VOString | null,
+    public status: VOStatus | null
   ) {
     super();
   }
@@ -26,73 +24,94 @@ export class JobModel extends AggregateRoot {
     _id: string,
     title: string,
     description: string,
+    extraInformation: string,
     url: string,
-    status: string,
-    isChecked: boolean
+    status: string
   ) {
-    const job = new JobModel(
+    return new JobModel(
       new VOUuid(_id),
       new VOTitle(title),
       new VODescription(description),
+      new VOExtraInformation(extraInformation),
       new VOString(url),
-      new VOStatus(status),
-      new VOBoolean(isChecked || false)
+      new VOStatus(status || JobStatusEnum.NO_SENDED)
     );
-    return job;
   }
 
   static create(
     jobId: VOUuid,
     title: VOTitle,
     description: VODescription,
+    extraInformation: VOExtraInformation,
     url: VOString,
-    status: VOStatus,
-    isChecked: VOBoolean
+    status: VOStatus
   ) {
-    return new JobModel(jobId, title, description, url, status, isChecked);
+    return new JobModel(
+      jobId,
+      title,
+      description,
+      extraInformation,
+      url,
+      status
+    );
   }
 
-  public update(title: VOTitle, description: VODescription, url: VOString, status: VOStatus) {
-    this._assertDataWillChange(title, description, url);
+  public update(
+    title: VOTitle,
+    description: VODescription,
+    extraInformation: VOExtraInformation,
+    url: VOString
+  ) {
+    this._assertDataWillChange(title, description, extraInformation, url);
 
     this.title = title;
     this.description = description;
+    this.extraInformation = extraInformation;
     this.url = url;
+  }
+
+
+  public updateExtraInformation(
+    extraInformation: VOExtraInformation,
+  ) {
+    this._assertCanChangeExtraInformation(extraInformation);
+    this.extraInformation = extraInformation;
+  }
+
+  public changeStatusJob(status: VOStatus) {
+    this._assertCanChangeStatus(status);
     this.status = status;
   }
 
-  public checkJob() {
-    this._assertJobCheckeable();
-    this.isChecked = new VOBoolean(true);
+  private _assertCanChangeStatus(status: VOStatus) {
+    const oldStatus = this.status.value;
+    const newStatus = status.value;
+    if (oldStatus === newStatus) throw new JobNothingToUpdateException();
   }
 
-  public uncheckJob() {
-    this._assertJobIsNotCheckable();
-    this.isChecked = new VOBoolean(false);
-  }
-
-  private _assertJobCheckeable() {
-    if (this.isChecked.value) throw new JobCantCheckedException();
-  }
-
-  private _assertJobIsNotCheckable() {
-    if (!this.isChecked.value) throw new JobCantUncheckedException();
+  private _assertCanChangeExtraInformation(extraInfo: VOExtraInformation) {
+    const oldInfo = this.extraInformation.value;
+    const newInfo = extraInfo.value;
+    if (oldInfo === newInfo) throw new Error('NOTHING_TO_UPDATE');
   }
 
   private _assertDataWillChange(
     title: VOTitle,
     description: VODescription,
+    extraInformation: VOExtraInformation,
     url: VOString
   ) {
     const oldData = {
       title: this.title.value,
       description: this.description.value,
+      extraInformation: this.extraInformation.value,
       url: this.url.value,
     };
 
     const newData = {
       title: title.value,
       description: description.value,
+      extraInformation: extraInformation.value,
       url: url.value,
     };
 
